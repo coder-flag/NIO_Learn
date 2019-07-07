@@ -173,7 +173,13 @@ public class NioServer {
         * 将客户端发送的请求信息，广播给其他客户端
         **/
         if(request.length() > 0 ){
-            System.out.println("" + request) ;
+            System.out.println("::" + request) ;
         }
+    }
+
+    public static void  main(String[] args) throws IOException {
+         NioServer nioServer = new NioServer();
+         nioServer.start();
+
     }
 }
