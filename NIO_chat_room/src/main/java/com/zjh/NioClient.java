@@ -2,6 +2,7 @@ package com.zjh;
 
 import jdk.nashorn.internal.ir.WhileNode;
 
+import javax.lang.model.element.NestingKind;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.SelectionKey;
@@ -23,7 +24,7 @@ public class NioClient {
     /**
     * 启动
     **/
-    public void start() throws IOException {
+    public void start(String name) throws IOException {
 
         /**
         * 连接服务器端
@@ -48,7 +49,7 @@ public class NioClient {
         while (scanner.hasNextLine()){
             String requst = scanner.nextLine();
             if(requst != null && requst.length() > 0){
-                socketChannel.write(Charset.forName("UTF-8").encode(requst));
+                socketChannel.write(Charset.forName("UTF-8").encode(name+" : "+requst));
             }
         }
 
@@ -56,8 +57,8 @@ public class NioClient {
     }
 
     public static void  main(String[] args) throws IOException {
-       NioClient nioClient = new NioClient();
-       nioClient.start();
+//       NioClient nioClient = new NioClient();
+//       nioClient.start();
     }
 
 

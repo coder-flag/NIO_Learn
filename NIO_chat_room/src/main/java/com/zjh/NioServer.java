@@ -3,10 +3,7 @@ package com.zjh;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
-import java.nio.channels.SelectionKey;
-import java.nio.channels.Selector;
-import java.nio.channels.ServerSocketChannel;
-import java.nio.channels.SocketChannel;
+import java.nio.channels.*;
 import java.nio.charset.Charset;
 import java.util.Iterator;
 import java.util.Set;
@@ -173,8 +170,33 @@ public class NioServer {
         * 将客户端发送的请求信息，广播给其他客户端
         **/
         if(request.length() > 0 ){
-            System.out.println("::" + request) ;
+            broadCast(selector, socketChannel, request);
         }
+    }
+
+    private void broadCast(Selector selector , SocketChannel sourceChannel, String request){
+        /**
+        * 获取到所有已经连接的客户端的channel
+        **/
+        Set<SelectionKey> selectionKeySet = selector.keys();
+
+        selectionKeySet.forEach(selectionKey -> {
+            Channel targetChannel = selectionKey.channel();
+            if(targetChannel instanceof SocketChannel && targetChannel != sourceChannel){
+
+                //将消息通知广播到客户端
+                try {
+                    ((SocketChannel) targetChannel).write(Charset.forName("UTF-8").encode(request));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+
+        /**
+        * 循环向所有channel广播信息
+        **/
     }
 
     public static void  main(String[] args) throws IOException {
